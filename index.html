@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proof of Randomness</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Proof of Randomness</h1>
+        <p>Click the button below to generate a random number and store it on the blockchain.</p>
+        <button id="generateButton">Generate Random Number</button>
+        <div id="result"></div>
+        <h2>Leaderboard</h2>
+        <p>Highest Number: <span id="highestNumber">Loading...</span></p>
+        <p>Lowest Number: <span id="lowestNumber">Loading...</span></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
