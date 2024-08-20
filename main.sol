@@ -21,7 +21,7 @@ contract ProofOfRandomness {
     // Function to generate and store a random number
     function generateRandomNumber() public {
         // Generating random number using keccak256 and block data
-        uint256 random = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, msg.sender))) % 1000;
+        uint256 random = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, msg.sender))) % 1000;
 
         // Store random number
         randomNumbers.push(UserRandom(msg.sender, random));
