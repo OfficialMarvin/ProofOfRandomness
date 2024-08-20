@@ -10,81 +10,163 @@ window.addEventListener('load', async () => {
 
     // Smart contract ABI and address
     const contractABI = [
-        // Simplified ABI with only the methods we need
-        {
-            "constant": false,
-            "inputs": [],
-            "name": "generateRandomNumber",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "getRandomNumbers",
-            "outputs": [
-                {
-                    "components": [
-                        {
-                            "name": "user",
-                            "type": "address"
-                        },
-                        {
-                            "name": "randomNumber",
-                            "type": "uint256"
-                        }
-                    ],
-                    "name": "",
-                    "type": "tuple[]"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "getLeaderboard",
-            "outputs": [
-                {
-                    "components": [
-                        {
-                            "name": "user",
-                            "type": "address"
-                        },
-                        {
-                            "name": "randomNumber",
-                            "type": "uint256"
-                        }
-                    ],
-                    "name": "highest",
-                    "type": "tuple"
-                },
-                {
-                    "components": [
-                        {
-                            "name": "user",
-                            "type": "address"
-                        },
-                        {
-                            "name": "randomNumber",
-                            "type": "uint256"
-                        }
-                    ],
-                    "name": "lowest",
-                    "type": "tuple"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "randomNumber",
+				"type": "uint256"
+			}
+		],
+		"name": "RandomNumberGenerated",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "generateRandomNumber",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getLeaderboard",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "randomNumber",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ProofOfRandomness.UserRandom",
+				"name": "highest",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "randomNumber",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ProofOfRandomness.UserRandom",
+				"name": "lowest",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getRandomNumbers",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "randomNumber",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ProofOfRandomness.UserRandom[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "highestNumber",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "lowestNumber",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "randomNumbers",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "randomNumber",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}];
 
-    const contractAddress = 'YOUR_CONTRACT_ADDRESS_HERE';
+    const contractAddress = '0xB49580e18e23b14383Bc52E097108ef901fB6661';
     const contract = new web3.eth.Contract(contractABI, contractAddress);
 
     // Generate random number and update leaderboard
