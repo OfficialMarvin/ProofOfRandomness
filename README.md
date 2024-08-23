@@ -30,7 +30,7 @@
 
 ### 4. Interact with the DApp
 
-- **Use MetaMask:** Connect to the correct network, generate random numbers, and check the leaderboard.
+- **Use Rainbow:** Connect to the correct network, generate random numbers, and check the leaderboard.
 
 ## 📜 Smart Contract Overview
 
