@@ -1,4 +1,4 @@
-# Proof of Randomness 🧬
+# Proof of Randomness 🎲
 
 **Proof of Randomness** is a decentralized application (DApp) that allows users to generate a random number, store it on the blockchain, and compete on a global leaderboard. It’s a simple project demonstrating the integration of Solidity smart contracts with a basic web interface.
 
