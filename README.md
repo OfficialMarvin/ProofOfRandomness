@@ -20,7 +20,7 @@
 ### 2. Update the Front-End
 
 - **Edit `app.js`:** 
-  - Replace `'YOUR_CONTRACT_ADDRESS_HERE'` with your deployed contract address.
+  - Replace `const contractAddress` with your deployed contract address.
 
 ### 3. Serve the Front-End
 
