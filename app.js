@@ -1,21 +1,8 @@
 window.addEventListener('load', async () => {
-    // Initialize web3 with MetaMask or fallback to Infura provider for Sepolia
     let web3;
-    if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
-        try {
-            // Request account access if needed
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            console.log('Connected to MetaMask successfully!');
-        } catch (error) {
-            console.error('User denied account access to MetaMask', error);
-        }
-    } else {
-        // Fallback to Infura provider if MetaMask is not available
-        const provider = new Web3.providers.HttpProvider('https://sepolia.infura.io/v3/ef929a0b34fa45c6b8758c57145b96b5');
-        web3 = new Web3(provider);
-        console.log('No MetaMask detected, connected to Sepolia via Infura');
-    }
+    let contract;
+    const infuraProvider = new Web3.providers.HttpProvider('https://sepolia.infura.io/v3/ef929a0b34fa45c6b8758c57145b96b5');
+    web3 = new Web3(infuraProvider);
 
     // Smart contract ABI and address
     const contractABI = [
@@ -176,43 +163,61 @@ window.addEventListener('load', async () => {
         }
     ];
 
-    const contractAddress = '0xB49580e18e23b14383Bc52E097108ef901fB6661'; // Update with your actual contract address
-    const contract = new web3.eth.Contract(contractABI, contractAddress);
+    const contractAddress = '0xB49580e18e23b14383Bc52E097108ef901fB6661';
+    contract = new web3.eth.Contract(contractABI, contractAddress);
 
-    // Generate random number and update leaderboard
+    // Elements
     const generateButton = document.getElementById('generateButton');
     const resultDiv = document.getElementById('result');
     const highestNumberSpan = document.getElementById('highestNumber');
     const lowestNumberSpan = document.getElementById('lowestNumber');
 
-    generateButton.addEventListener('click', async () => {
-        const accounts = await web3.eth.getAccounts();
-        const account = accounts[0];
-
-        resultDiv.innerHTML = 'Generating random number...';
-
+    // Load leaderboard using Infura
+    const loadLeaderboard = async () => {
         try {
-            await contract.methods.generateRandomNumber().send({ from: account });
-            resultDiv.innerHTML = 'Random number generated and stored on the blockchain!';
-
-            // Update the leaderboard
             const leaderboard = await contract.methods.getLeaderboard().call();
             highestNumberSpan.innerHTML = `${leaderboard.highest.randomNumber} (User: ${leaderboard.highest.user})`;
             lowestNumberSpan.innerHTML = `${leaderboard.lowest.randomNumber} (User: ${leaderboard.lowest.user})`;
         } catch (error) {
-            console.error(error);
-            resultDiv.innerHTML = 'Error generating random number.';
+            console.error('Error loading leaderboard', error);
+            highestNumberSpan.innerHTML = 'Error loading leaderboard.';
+            lowestNumberSpan.innerHTML = 'Error loading leaderboard.';
+        }
+    };
+
+    // Load leaderboard on page load
+    await loadLeaderboard();
+
+    // Web3 Wallet connection only on generate button press
+    generateButton.addEventListener('click', async () => {
+        if (window.ethereum) {
+            web3 = new Web3(window.ethereum);
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+                console.log('Connected to MetaMask successfully!');
+
+                const accounts = await web3.eth.getAccounts();
+                const account = accounts[0];
+
+                resultDiv.innerHTML = 'Generating random number...';
+
+                try {
+                    await contract.methods.generateRandomNumber().send({ from: account });
+                    resultDiv.innerHTML = 'Random number generated and stored on the blockchain!';
+
+                    // Update the leaderboard
+                    await loadLeaderboard();
+                } catch (error) {
+                    console.error('Error generating random number', error);
+                    resultDiv.innerHTML = 'Error generating random number.';
+                }
+            } catch (error) {
+                console.error('User denied account access to MetaMask', error);
+                resultDiv.innerHTML = 'Error connecting to MetaMask.';
+            }
+        } else {
+            resultDiv.innerHTML = 'No Web3 wallet detected. Please install MetaMask or another wallet extension.';
         }
     });
-
-    // Initial load of leaderboard
-    try {
-        const leaderboard = await contract.methods.getLeaderboard().call();
-        highestNumberSpan.innerHTML = `${leaderboard.highest.randomNumber} (User: ${leaderboard.highest.user})`;
-        lowestNumberSpan.innerHTML = `${leaderboard.lowest.randomNumber} (User: ${leaderboard.lowest.user})`;
-    } catch (error) {
-        console.error(error);
-        highestNumberSpan.innerHTML = 'Error loading leaderboard.';
-        lowestNumberSpan.innerHTML = 'Error loading leaderboard.';
-    }
 });
