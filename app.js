@@ -213,11 +213,11 @@ window.addEventListener('load', async () => {
                     resultDiv.innerHTML = 'Error generating random number.';
                 }
             } catch (error) {
-                console.error('User denied account access to MetaMask', error);
-                resultDiv.innerHTML = 'Error connecting to MetaMask.';
+                console.error('User denied account access to wallet', error);
+                resultDiv.innerHTML = 'Error connecting to wallet.';
             }
         } else {
-            resultDiv.innerHTML = 'No Web3 wallet detected. Please install MetaMask or another wallet extension.';
+            resultDiv.innerHTML = 'No Web3 wallet detected. Please install Rainbow or another wallet extension.';
         }
     });
 });
